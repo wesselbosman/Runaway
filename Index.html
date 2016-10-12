@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Living Annuity Calculator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="dist/css/bootstrap.min.css">
+
+    <script>
+        function ajax_post(){
+            // Create our XMLHttpRequest object
+            var hr = new XMLHttpRequest();
+            // Create some variables we need to send to our PHP file
+            var url = "./src/calculator/calculator.php";
+            var lumpSum = document.getElementById("lumpSum").value;
+            var annual = document.getElementById("annual").value;
+            var minimumInvestmentLevel = document.getElementById("minimumInvestmentLevel").value;
+            var expectedMarketReturn = document.getElementById("expected").value;
+            var vars = "lumpSum="+lumpSum+"&annual="+annual+"&minimumInvestmentLevel="+minimumInvestmentLevel+"&expectedMarketReturn="+expectedMarketReturn;
+            hr.open("POST", url, true);
+            // Set content type header information for sending url encoded variables in the request
+            hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            // Access the onreadystatechange event for the XMLHttpRequest object
+            hr.onreadystatechange = function() {
+                if (hr.readyState == 4 && hr.status == 200) {
+                    document.getElementById("status").innerHTML = hr.responseText;
+                }
+            }
+            //Execute the request
+            hr.send(vars);
+            document.getElementById("status").innerHTML = "processing...";
+        }
+    </script>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Living Annuity Calculator</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>Form</h1>
+            <form>
+                <div class="form-group">
+                    <label for="lumpSum">Lump sum</label>
+                    <input type="text" placeholder="Lump sum" name="lumpSum" class="form-control" id="lumpSum">
+                </div>
+                <div class="form-group">
+                    <label for="annual">Annual amount</label>
+                    <input type="text" placeholder="Annual amount as percentage or rand value" name="annual" class="form-control" id="annual">
+                </div>
+                <div class="form-group">
+                    <label for="minimumInvestmentLevel">Minimum investment level</label>
+                    <input type="text" placeholder="Minimum investment level" name="minimumInvestmentLevel" class="form-control" id="minimumInvestmentLevel">
+                </div>
+                <div class="form-group">
+                    <label for="expected">Expected market return</label>
+                    <input type="text" placeholder="Expected market return" name="expectedMarketReturn" class="form-control" id="expected">
+                </div>
+                <div class="form-group">
+                    <input id="submitButton" type="submit" value="Calculate" class="btn btn-primary" onclick="ajax_post(); return false;" formmethod="post">
+                </div>
+            </form>
+            <div>
+                <span>Amount of months</span>
+                <span id="status"></span>
+
+            </div>
+        </div>
+        <aside class="col-sm-offset-1 col-sm-5">
+            <h1>Help</h1>
+        </aside>
+    </div>
+</div>
+
+
+<script src="dist/js/bootstrap.min.js"></script>
+</body>
+</html>
